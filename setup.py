@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='api_call',
+    name='regulations-boinc',
     packages=find_packages('src'),
-    packages_dir={'':'src'}
+    package_dir={'': 'src'}
 )
