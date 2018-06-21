@@ -18,10 +18,12 @@ def create_work_file(num, workfile_tempdir):
 
 
 def test_new_work_file_size():
+    wf.work_file("")
     assert wf.size() == 0
 
 
 def test_add_doc_changes_size():
+    wf.work_file("")
     wf.add_doc("ID", 1)
     assert wf.size() == 1
 

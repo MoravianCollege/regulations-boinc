@@ -1,8 +1,7 @@
-
 from setuptools import setup, find_packages
 
 setup(
-    name='work_file',
+    name='regulations-boinc',
     packages=find_packages('src'),
     package_dir={'': 'src'}
 )
