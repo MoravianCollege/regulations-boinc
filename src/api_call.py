@@ -8,14 +8,15 @@ key = os.environ['API_TOKEN_REGULATIONS_GOV']
 def call(url):
 
     """
-    :param url: the url that will be sued to make the api call
-    :return: returns the json format information of the documents
-
     Sends an api call to regulations.gov
     Loads the result as json if it is a valid call, otherwise raises exceptions
     When a 300 status code is given, return a temporary exception so the user can retry the api call
     When a 429 status code is given, the user is out of api calls and must wait an hour to make more
     When 400 or 500 status codes are given there is a problem with the api connection
+
+    :param url: the url that will be sued to make the api call
+    :return: returns the json format information of the documents
+
     """
 
     result = requests.get(url)
