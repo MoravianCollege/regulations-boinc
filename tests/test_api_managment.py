@@ -2,9 +2,9 @@ import pytest
 import requests_mock
 from mock import *
 
-from APICallManager import *
+from api_call_managment import *
 
-key = os.environ['FRED_API_TOKEN_REGULATIONS_GOV']
+key = os.environ['API_TOKEN_REGULATIONS_GOV']
 base_url = 'https://api.data.gov:443/regulations/v3/documents.json?'
 
 
@@ -30,14 +30,14 @@ def test_retry_calls_Failure(mock_req):
     with pytest.raises(CallFailException):
         api_call_manager(add_api_key(base_url))
 
-def test_permanent_error(mock_req):
+def test_callfailexception(mock_req):
     mock_req.get(add_api_key(base_url), status_code=403)
     with pytest.raises(CallFailException):
         api_call_manager(add_api_key(base_url))
 
 
 @patch('time.sleep', set_time())
-def test_sleep_one_hour(mock_req):
+def test_user_out_of_api_calls_sleeps(mock_req):
     mock_req.register_uri('GET', add_api_key(base_url), [{'text': 'resp1', 'status_code': 429},{'text': '{}', 'status_code': 200}])
     assert api_call_manager(add_api_key(base_url)) == {}
 
