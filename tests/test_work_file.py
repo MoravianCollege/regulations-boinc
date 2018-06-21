@@ -17,7 +17,7 @@ def create_work_file(num, workfile_tempdir):
     return test_txt
 
 
-def test_new_work_file():
+def test_new_work_file_size():
     assert wf.size() == 0
 
 
@@ -42,7 +42,7 @@ def test_write_check_content(workfile_tempdir):
         assert f.readline().strip() == "ID"
 
 
-def test_write_stress_test(workfile_tempdir):
+def test_write_many_ids(workfile_tempdir):
     test_txt = create_work_file(0, workfile_tempdir)
     number = 1000000
     for x in range(number):
