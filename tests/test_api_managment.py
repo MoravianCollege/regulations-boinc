@@ -4,10 +4,7 @@ from mock import *
 
 from api_call_managment import *
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 3930ccc4cef0c326c4acd680cf48108e84fb100e
 base_url = 'https://api.data.gov:443/regulations/v3/documents.json?'
 
 

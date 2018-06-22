@@ -39,10 +39,6 @@ def test_invalid_key_gives_permanent_exception(mock_req):
         mock_req.get(add_api_key(base_url), status_code=403)
         with pytest.raises(PermanentException):
             call(base_url)
-<<<<<<< HEAD
-=======
-
->>>>>>> 3930ccc4cef0c326c4acd680cf48108e84fb100e
 
 def test_generic_500_failure(mock_req):
     mock_req.get(add_api_key(base_url), status_code=500)
