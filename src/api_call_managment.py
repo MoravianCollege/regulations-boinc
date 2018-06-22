@@ -4,6 +4,7 @@ from api_call import *
 
 key = os.environ['API_TOKEN_REGULATIONS_GOV']
 
+
 def api_call_manager(url):
 
     """
@@ -17,7 +18,7 @@ def api_call_manager(url):
     """
 
     pause = 0
-    while (pause < 51):
+    while pause < 51:
         try:
             document = call(url)
             return document
@@ -29,7 +30,6 @@ def api_call_manager(url):
         except ApiCountZeroException:
             time.sleep(3600)
     raise CallFailException
-
 
 
 class CallFailException(Exception):

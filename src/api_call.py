@@ -19,12 +19,12 @@ def call(url):
 
     """
 
-    result = requests.get(url)
-    if (300 <= result.status_code < 400):
+    result = requests.get(add_api_key(url))
+    if 300 <= result.status_code < 400:
         raise TemporaryException
-    if(result.status_code == 429):
+    if result.status_code == 429:
         raise ApiCountZeroException
-    if(400 <= result.status_code < 600):
+    if 400 <= result.status_code < 600:
         raise PermanentException
 
     documents = json.loads(result.text)
@@ -40,10 +40,12 @@ def add_api_key(url):
 class TemporaryException(Exception):
     print("NOTICE: There seems to be a connection error")
 
+
 # Throw an exception if the user is out of api calls
 class ApiCountZeroException(Exception):
     print("NOTICE: You have used all your API calls.")
 
-#T hrow an exception if there is an error with the API call
+
+# Throw an exception if there is an error with the API call
 class PermanentException(Exception):
     print("NOTICE: There is an error with your API call")
