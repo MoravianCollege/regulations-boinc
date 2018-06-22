@@ -38,12 +38,12 @@ def add_api_key(url):
 
 # Throw an exception if there is an error communicating
 class TemporaryException(Exception):
-    print("There seems to be a connection error")
+    print("NOTICE: There seems to be a connection error")
 
 # Throw an exception if the user is out of api calls
 class ApiCountZeroException(Exception):
-    print("You have used all your API calls.")
+    print("NOTICE: You have used all your API calls.")
 
 #T hrow an exception if there is an error with the API call
 class PermanentException(Exception):
-    print("There is an error with your API call")
+    print("NOTICE: There is an error with your API call")
