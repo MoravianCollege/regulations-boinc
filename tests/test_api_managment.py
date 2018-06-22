@@ -4,7 +4,10 @@ from mock import *
 
 from api_call_managment import *
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3930ccc4cef0c326c4acd680cf48108e84fb100e
 base_url = 'https://api.data.gov:443/regulations/v3/documents.json?'
 
 
@@ -12,6 +15,7 @@ base_url = 'https://api.data.gov:443/regulations/v3/documents.json?'
 def mock_req():
     with requests_mock.Mocker() as m:
         yield m
+
 
 def set_time():
     mock_time = Mock()
@@ -25,7 +29,7 @@ def test_success(mock_req):
 
 
 @patch('time.sleep', set_time())
-def test_retry_calls_Failure(mock_req):
+def test_retry_calls_failure(mock_req):
     mock_req.get(add_api_key(base_url), status_code=304)
     with pytest.raises(CallFailException):
         api_call_manager(base_url)
