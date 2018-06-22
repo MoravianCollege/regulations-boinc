@@ -2,7 +2,6 @@ import time
 
 from api_call import *
 
-key = os.environ['API_TOKEN_REGULATIONS_GOV']
 
 def api_call_manager(url):
 

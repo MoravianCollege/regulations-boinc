@@ -19,7 +19,7 @@ def call(url):
 
     """
 
-    result = requests.get(url)
+    result = requests.get(add_api_key(url))
     if (300 <= result.status_code < 400):
         raise TemporaryException
     if(result.status_code == 429):
