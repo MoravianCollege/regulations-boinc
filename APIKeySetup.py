@@ -5,93 +5,74 @@ from appJar import gui
 app = gui("Regulations-BOINC")
 
 
-def sendErrorMessage(errorCode, errorMessage=0):
-    '''
-    Sends an error message to the user.
-    :param errorCode: Error code to be displayed.
-    :param errorMessage: An integer, either 0 or 1, specifying which message should be displayed after the error; 0 for "Please try again later" and 1 for "Are you connected to the internet?. Defaults to 0"
-    :return:
-    '''
+#This code builds a window to display an error message.
+#The window can be shown by calling: app.showSubWindow("errorWindow")
+app.startSubWindow("errorWindow", "Error")
 
-    app.startSubWindow("errorWindow", "Error")
+app.top = True
+app.resizable = False
+app.font = {'size': 18, 'family': 'Gill Sans'}
 
-    app.top = True
-    app.resizable = False
-    app.font = {'size': 18, 'family': 'Gill Sans'}
+app.padding = (10, 8)
+app.guiPadding = (10, 30)
 
-    app.padding = (10, 8)
-    app.guiPadding = (10, 30)
+app.addLabel("errorCode", "We weren't able to connect to regulations.gov.")
+app.addLabel("errorMessage", "Please try again later.")
 
-    app.addLabel("errorCode", "Error: " + str(errorCode))
-    if errorMessage == 0:
-        app.addLabel("errorMessage", "Please try again later.")
-    else:
-        app.addLabel("errorMessage", "Are you connected to the internet?")
+def exit(buttonName):
+    app.hideSubWindow("errorWindow")
 
-    def exit(buttonName):
-        app.hideSubWindow("errorWindow")
+app.addButton("   Okay   ", exit)
 
-    app.addButton("   Okay   ", exit)
-
-    app.stopSubWindow()
-    app.showSubWindow("errorWindow")
+app.stopSubWindow()
+#Done building window.
 
 
-def sendInvalidKeyMessage():
-    '''
-    Sends a message informing the user that the key they entered is invalid, and providing them with
-    a link to help them get one.
-    :return:
-    '''
 
-    app.startSubWindow("invalidKeyWindow", "Error")
+# This code builds a window to display an invalid API key message.
+#The window can be shown by calling: app.showSubWindow("invalidKeyWindow")
+app.startSubWindow("invalidKeyWindow", "Error")
 
-    app.top = True
-    app.resizable = False
-    app.font = {'size': 18, 'family': 'Gill Sans'}
+app.top = True
+app.resizable = False
+app.font = {'size': 18, 'family': 'Gill Sans'}
 
-    app.padding = (50, 2)
+app.padding = (50, 2)
 
-    app.addLabel("errorCode", "Invalid API Key!")
-    app.addLabel("errorMessage", "Please visit:")
-    app.link("regulations.gov", "https://regulationsgov.github.io/developers/")
-    app.addLabel("errorMessageTwo", "for an API Key.")
+app.addLabel("errorLabel1", "Invalid API Key!")
+app.addLabel("errorLabel2", "Please visit:")
+app.link("regulations.gov", "https://regulationsgov.github.io/developers/")
+app.addLabel("errorLabel3", "for an API Key.")
 
-    def exit(buttonName):
-        app.hideSubWindow("invalidKeyWindow")
+def exit(buttonName):
+    app.hideSubWindow("invalidKeyWindow")
 
-    app.addButton("   Okay   ", exit)
+app.addButton("   Back   ", exit)
 
-    app.stopSubWindow()
-
-    app.showSubWindow("invalidKeyWindow")
+app.stopSubWindow()
+#Done building window.
 
 
-def sendSuccessMessage():
-    '''
-    Final message, to be displayed if/when everything finishes correctly.
-    :return:
-    '''
+#Builds a window for the final message, to be displayed if/when everything finishes correctly.
+# The window can be shown by calling: app.showSubWindow("successWindow")
+app.startSubWindow("successWindow", "Regulations-Boinc")
 
-    app.startSubWindow("successWindow", "Error")
+app.top = True
+app.resizable = False
+app.font = {'size': 18, 'family': 'Gill Sans'}
 
-    app.top = True
-    app.resizable = False
-    app.font = {'size': 18, 'family': 'Gill Sans'}
+app.padding = (50, 2)
 
-    app.padding = (50, 2)
+app.addLabel("successMessage", "Successfully stored API Key!")
 
-    app.addLabel("successMessage", "Successfully stored API Key!")
+def end(buttonName):
+    app.hideSubWindow("successWindow")
+    app.stop()
 
-    def exit(buttonName):
-        app.hideSubWindow("successWindow")
-        app.stop()
+app.addNamedButton("   Done   ", "doneButton", end)
 
-    app.addNamedButton("   Okay   ", "doneButton", exit)
-
-    app.stopSubWindow()
-
-    app.showSubWindow("successWindow")
+app.stopSubWindow()
+#Done building window
 
 
 def writeAPIKey(key):
@@ -140,7 +121,7 @@ def press(buttonName):
         try:
             r = requests.get("https://api.data.gov/regulations/v3/documents.json?api_key=" + apiKey)
         except requests.ConnectionError:
-            sendErrorMessage("Could not connect to server!", 1)
+            app.showSubWindow("errorWindow")
             return
 
         # Anything 300 & above is an error, but 429 is the error for a key that's run out of requests
@@ -149,17 +130,17 @@ def press(buttonName):
 
             if r.status_code == 403:
 
-                sendInvalidKeyMessage()
+                app.showSubWindow("invalidKeyWindow")
 
             else:
 
-                sendErrorMessage(r.status_code)
+                app.showSubWindow("errorWindow")
 
         else:
 
             writeAPIKey(apiKey)
             
-            sendSuccessMessage()
+            app.showSubWindow("successWindow")
 
 
 
