@@ -1,5 +1,3 @@
-from api_call_managment import *
-from work_accumulator import *
 from call_file_processor import *
 import tempfile
 
@@ -31,16 +29,17 @@ def workfile_tempdir():
         yield tmpdirname
 
 
-# PRE PROCESS
+def test_valid_results(mock_req, workfile_tempdir):
+    mock_req.get(add_api_key(base_url), status_code=200, text='{"documents": '
+                                                              '[{"documentId": "CMS-2005-0001-0001", "attachmentCount": 4},\
+                                                                {"documentId": "CMS-2005-0001-0002", "attachmentCount": 999}]}')
+    result = process_results(process_call(base_url), workfile_tempdir)
+    assert result
 
 
-def test_successful_call(workfile_tempdir):
-    result = process_results({"documents": [
-                             {"documentId": "CMS-2005-0001-0001", "attachmentCount": 4},
-                             {"documentId": "CMS-2005-0001-0002", "attachmentCount": 999}]},
-                             workfile_tempdir)
-    # RETURN ??????
-    assert result == 2
+def test_successful_call(mock_req):
+    mock_req.get(add_api_key(base_url), status_code=200, text='{}')
+    assert process_call(base_url).text == '{}'
 
 
 def test_call_fail_raises_exception(mock_req):
@@ -51,17 +50,19 @@ def test_call_fail_raises_exception(mock_req):
 
 def test_file_not_found():
     with pytest.raises(FileNotFoundError):
-        call_file_processor("this/does/not/exist.txt")
+        call_file_processor("this/does/not/exist.txt", "")
 
 
-def test_empty_json():
+def test_empty_json(mock_req):
+    mock_req.get(add_api_key(base_url), status_code=200, text='')
     with pytest.raises(BadJsonException):
-        process_results("", "")
+        process_results(process_call(base_url), "")
 
 
-def test_bad_json_format():
+def test_bad_json_format(mock_req):
+    mock_req.get(add_api_key(base_url), status_code=200, text='{information: [{},{}]}')
     with pytest.raises(BadJsonException):
-        process_results("information: []", "")
+        process_results(process_call(base_url), "")
 
 
 
