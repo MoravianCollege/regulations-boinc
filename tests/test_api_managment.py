@@ -21,7 +21,7 @@ def set_time():
 
 def test_success(mock_req):
     mock_req.get(add_api_key(base_url), status_code=200, text='{}')
-    assert api_call_manager(base_url) == {}
+    assert api_call_manager(base_url).text == '{}'
 
 
 @patch('time.sleep', set_time())
@@ -39,7 +39,7 @@ def test_callfailexception(mock_req):
 @patch('time.sleep', set_time())
 def test_user_out_of_api_calls_sleeps(mock_req):
     mock_req.register_uri('GET', add_api_key(base_url), [{'text': 'resp1', 'status_code': 429},{'text': '{}', 'status_code': 200}])
-    assert api_call_manager(base_url) == {}
+    assert api_call_manager(base_url).text == '{}'
 
 
 

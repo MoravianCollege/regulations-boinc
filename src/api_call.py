@@ -1,6 +1,5 @@
 import requests
 import os
-import json
 
 key = os.environ['API_TOKEN_REGULATIONS_GOV']
 
@@ -26,9 +25,7 @@ def call(url):
         raise ApiCountZeroException
     if 400 <= result.status_code < 600:
         raise PermanentException
-
-    documents = json.loads(result.text)
-    return documents
+    return result
 
 
 # The api key will not be given in the url so we must add that ourselves
