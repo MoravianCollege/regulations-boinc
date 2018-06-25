@@ -6,8 +6,9 @@ filename = ""
 
 def work_file(file_path):
     """
-    Constructor for the work file. Sets all of the global variables to their initial states.
-    :param file_path: This is the path where the file is that will be written to
+    Constructor for the work file
+    Sets all of the global variables to their initial states
+    :param file_path: this is the path where the file is that will be written to
     :return:
     """
     global filename, document_ids, total_size
@@ -28,10 +29,10 @@ def write():
 
 def add_doc(document_id, count):
     """
-    This adds the document id to the list of ids that will be saved to a file.
-    The count is the number of calls necessary to collect all of the data for the specific document id.
-    :param document_id: The document id as a string.
-    :param count: This is an integer for the number of calls to collect all information about the given document.
+    This adds the document id to the list of ids that will be saved to a file
+    The count is the number of calls necessary to collect all of the data for the specific document id
+    :param document_id: the document id as a string
+    :param count: this is an integer for the number of calls to collect all information about the given document
     :return:
     """
     global total_size
@@ -41,8 +42,8 @@ def add_doc(document_id, count):
 
 def size():
     """
-    :return: This returns the total number of requests necessary to collect all of the
-    data from all the current document ids.
+    :return: this returns the total number of requests necessary to collect all of the
+    data from all the current document ids
     """
     return total_size
 
