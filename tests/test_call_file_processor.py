@@ -1,6 +1,7 @@
 from api_call_managment import *
 from work_accumulator import *
 from call_file_processor import *
+import tempfile
 
 import pytest
 import requests_mock
@@ -24,13 +25,22 @@ def mock_req():
         yield m
 
 
+@pytest.fixture()
+def workfile_tempdir():
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        yield tmpdirname
+
+
 # PRE PROCESS
 
-'''
-def ignore_test_successful_call():
-    process_call()
-    pass
-'''
+
+def test_successful_call(workfile_tempdir):
+    result = process_results({"documents": [
+                             {"documentId": "CMS-2005-0001-0001", "attachmentCount": 4},
+                             {"documentId": "CMS-2005-0001-0002", "attachmentCount": 999}]},
+                             workfile_tempdir)
+    # RETURN ??????
+    assert result == 2
 
 
 def test_call_fail_raises_exception(mock_req):
@@ -39,23 +49,21 @@ def test_call_fail_raises_exception(mock_req):
         process_call(base_url)
 
 
-def ignore_test_file_not_found():
-    call_file_processor()
-    pass
-
-# PROCESS
+def test_file_not_found():
+    with pytest.raises(FileNotFoundError):
+        call_file_processor("this/does/not/exist.txt")
 
 
-def ignore_test_empty_json():
-    process_results()
-    pass
+def test_empty_json():
+    with pytest.raises(BadJsonException):
+        process_results("", "")
 
 
-def ignore_test_bad_json_format():
-    process_results()
-    pass
+def test_bad_json_format():
+    with pytest.raises(BadJsonException):
+        process_results("information: []", "")
 
 
-def ignore_test_wa_integration():
-    process_results()
-    pass
+
+
+
