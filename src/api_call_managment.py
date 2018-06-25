@@ -19,8 +19,8 @@ def api_call_manager(url):
     pause = 0
     while pause < 51:
         try:
-            document = call(url)
-            return document
+            result = call(url)
+            return result
         except TemporaryException:
             time.sleep(300)
             pause += 1

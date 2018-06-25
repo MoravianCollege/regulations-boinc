@@ -1,46 +1,42 @@
 from api_call_managment import *
 import work_accumulator as wa
 
+import json
 
 
-def call_file_processor(filepath):
+def call_file_processor(filepath, dirpath):
     try:
         f = open(filepath, 'r')
     except FileNotFoundError:
         raise FileNotFoundError
-
-    # HOW TO TEST
-    """
-    for line in file:
-        json = process_call(line)
-        process_results(json, dirpath)
-    """
-    pass
+    for line in f:
+        result = process_call(line)
+        process_results(result, dirpath)
+    return True
 
 
 def process_call(url):
-    # Call Manager
     try:
-        api_call_manager(url)
-    # Check for exceptions
+        result = api_call_manager(url)
+        return result
     except CallFailException:
         raise CallFailException
-    # RETURN SOMETHING
 
 
-def process_results(json, dirpath):
+def process_results(result, dirpath):
     try:
-        print(json)
-        doc_list = json["documents"]
+        docs_json = json.loads(result.text)
+        doc_list = docs_json["documents"]
+    except json.JSONDecodeError:
+        raise BadJsonException
     except TypeError:
         raise BadJsonException
 
     wa.work_accumulator(dirpath)
     for doc in doc_list:
         wa.add_doc(doc["documentId"], doc["attachmentCount"] + 1)
-
-    # RETURN ??????
-    return wa.get_count()
+    wa.terminate()
+    return True
 
 
 class BadJsonException(Exception):

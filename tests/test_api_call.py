@@ -14,7 +14,7 @@ def mock_req():
 
 def test_happy_path(mock_req):
     mock_req.get(add_api_key(base_url), status_code=200, text='{}')
-    assert call(base_url) == {}
+    assert call(base_url).text == '{}'
 
 
 def test_exception_thrown(mock_req):
