@@ -1,6 +1,5 @@
 import requests
 import os
-import json
 
 key = os.environ['API_TOKEN_REGULATIONS_GOV']
 
@@ -9,41 +8,38 @@ def call(url):
 
     """
     Sends an api call to regulations.gov
-    Loads the result as json if it is a valid call, otherwise raises exceptions
+    Raises exceptions if it is not a valid api call
     When a 300 status code is given, return a temporary exception so the user can retry the api call
     When a 429 status code is given, the user is out of api calls and must wait an hour to make more
     When 400 or 500 status codes are given there is a problem with the api connection
-
-    :param url: the url that will be sued to make the api call
+    :param url: the url that will be used to make the api call
     :return: returns the json format information of the documents
-
     """
-
-    result = requests.get(url)
-    if (300 <= result.status_code < 400):
+    result = requests.get(add_api_key(url))
+    if 300 <= result.status_code < 400:
         raise TemporaryException
-    if(result.status_code == 429):
+    if result.status_code == 429:
         raise ApiCountZeroException
-    if(400 <= result.status_code < 600):
+    if 400 <= result.status_code < 600:
         raise PermanentException
-
-    documents = json.loads(result.text)
-    return documents
+    return result
 
 
-# The api key will not be given in the url so we must add that ourselves
+# The api key will not be given in the url so it must be added
 def add_api_key(url):
     return url + "api_key=" + str(key)
 
 
-# Throw an exception if there is an error communicating
+# Raise an exception if there is an error communicating
 class TemporaryException(Exception):
-    print("There seems to be a connection error")
+    print("NOTICE: There seems to be a connection error")
 
-# Throw an exception if the user is out of api calls
+
+# Raise an exception if the user is out of api calls
 class ApiCountZeroException(Exception):
-    print("You have used all your API calls.")
+    print("NOTICE: You have used all your API calls.")
 
-#T hrow an exception if there is an error with the API call
+
+# Raise an exception if there is an error with the API call
 class PermanentException(Exception):
-    print("There is an error with your API call")
+    print("NOTICE: There is an error with your API call")
