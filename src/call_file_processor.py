@@ -1,14 +1,16 @@
 from api_call_managment import *
-from work_accumulator import *
+import work_accumulator as wa
 
 
 
-def call_file_processor():
-    """
+def call_file_processor(filepath):
     try:
-        open file
-    except os exception:
-        something
+        f = open(filepath, 'r')
+    except FileNotFoundError:
+        raise FileNotFoundError
+
+    # HOW TO TEST
+    """
     for line in file:
         json = process_call(line)
         process_results(json, dirpath)
@@ -23,13 +25,23 @@ def process_call(url):
     # Check for exceptions
     except CallFailException:
         raise CallFailException
+    # RETURN SOMETHING
 
 
 def process_results(json, dirpath):
-    # New Wa
-    # find json['documents']
-    # Iterate over docs
-    # Get id and attachment count
-    # add 1 to attach
-    # Call WA to add doc
-    pass
+    try:
+        print(json)
+        doc_list = json["documents"]
+    except TypeError:
+        raise BadJsonException
+
+    wa.work_accumulator(dirpath)
+    for doc in doc_list:
+        wa.add_doc(doc["documentId"], doc["attachmentCount"] + 1)
+
+    # RETURN ??????
+    return wa.get_count()
+
+
+class BadJsonException(Exception):
+    print("NOTICE: The Json appears to be formatted incorrectly.")
