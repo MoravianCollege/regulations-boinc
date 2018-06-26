@@ -63,6 +63,18 @@ def test_collect_attachments(mock_req):
     assert result == 1
 
 
+def test_save_document(workfile_tempdir):
+    result = "This is another test"
+    documentId = "0000-0000-0067"
+    save_document(workfile_tempdir, result, documentId)
+    with open(workfile_tempdir + "/doc." + documentId +".json", 'r') as f:
+        assert f.readline().strip() == "This is another test"
+
+
+
+
+
+
 
 
 
