@@ -66,8 +66,8 @@ def download_document(dirpath, documentId, result, type):
 def get_extra_documents(result, dirpath, documentId):
     """
     Download the json of the result from the original api call
-    Determine of the document has additional formats that need to be downloaded
-    Determines if the the document has attachments that need to be downloaded
+    Determine if the document has additional formats that need to be downloaded
+    Determines if the document has attachments that need to be downloaded
     :param result: the result of the api call
     :param dirpath: path to the directory where the download will be saved
     :param documentId: the string of a documentId
@@ -75,6 +75,20 @@ def get_extra_documents(result, dirpath, documentId):
     """
     doc_json = load_json(result)
     save_document(dirpath, doc_json, documentId)
+    total_requests = 0
+    total_requests += download_doc_formats(dirpath, doc_json, documentId)
+    total_requests += download_attachments(dirpath, doc_json, documentId)
+    return total_requests
+
+
+def download_doc_formats(dirpath, doc_json, documentId):
+    """
+    Download the other formats for the document
+    :param dirpath: path to the directory where the download will be saved
+    :param doc_json: the json from a single document api call
+    :param documentId: the string of a documentId
+    :return:
+    """
     total_requests = 0
     try:
         extra_formats = doc_json["fileFormats"]
@@ -86,6 +100,18 @@ def get_extra_documents(result, dirpath, documentId):
             download_document(dirpath, documentId, result, type)
     except KeyError:
         pass
+    return total_requests
+
+
+def download_attachments(dirpath, doc_json, documentId):
+    """
+    Download the other attachments for the document
+    :param dirpath: path to the directory where the download will be saved
+    :param doc_json: the json from a single document api call
+    :param documentId: the string of a documentId
+    :return:
+    """
+    total_requests = 0
     try:
         extra_attachments = doc_json["attachments"]
         total_requests += len(extra_attachments)
@@ -99,6 +125,7 @@ def get_extra_documents(result, dirpath, documentId):
     except KeyError:
         pass
     return total_requests
+
 
 
 

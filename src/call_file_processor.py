@@ -55,9 +55,9 @@ def process_results(result, dirpath):
 
 def load_json(result):
     """
-    TODO:
-    :param result:
-    :return:
+    loads the json format from the result of the api call
+    :param result: the result of the api call
+    :return: returns the json format of the api call
     """
     try:
         docs_json = json.loads(result.text)
