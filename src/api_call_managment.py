@@ -28,6 +28,6 @@ def api_call_manager(url):
     raise CallFailException
 
 
-# Raise an exception is there is a
+# Raise an exception is there is an error making the api call
 class CallFailException(Exception):
     print("NOTICE: There is an error with your API call")

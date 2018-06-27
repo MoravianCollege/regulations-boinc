@@ -13,11 +13,10 @@ def call_file_processor(filepath, dirpath):
     :param dirpath: path of the directory where workfiles will be written
     :return: returns True if the processor completed successfully
     """
-    f = open(filepath, 'r')
-    for line in f:
-        result = process_call(line)
-        process_results(result, dirpath)
-    f.close()
+    with open(filepath, 'r') as f:
+        for line in f:
+            result = process_call(line)
+            process_results(result, dirpath)
     return True
 
 
