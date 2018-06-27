@@ -5,6 +5,26 @@ from appJar import gui
 app = gui("Regulations-BOINC")
 
 
+def exit(buttonName):
+    '''
+    Closes an error window, called by buttons in error dialogs.
+    :param buttonName: Passed by appJar when the method is called.
+    :return:
+    '''
+    app.hideSubWindow("errorWindow")
+    app.hideSubWindow("invalidKeyWindow")
+
+
+def end(buttonName):
+    '''
+    Closes the GUI, called by a button in the final success dialog.
+    :param buttonName: Passed by appJar when the method is called.
+    :return:
+    '''
+    app.hideSubWindow("successWindow")
+    app.stop()
+
+
 #This code builds a window to display an error message.
 #The window can be shown by calling: app.showSubWindow("errorWindow")
 app.startSubWindow("errorWindow", "Error")
@@ -19,9 +39,6 @@ app.guiPadding = (10, 30)
 app.addLabel("errorCode", "We weren't able to connect to regulations.gov.")
 app.addLabel("errorMessage", "Please try again later.")
 
-def exit(buttonName):
-    app.hideSubWindow("errorWindow")
-
 app.addButton("   Okay   ", exit)
 
 app.stopSubWindow()
@@ -29,8 +46,10 @@ app.stopSubWindow()
 
 
 
-# This code builds a window to display an invalid API key message.
-#The window can be shown by calling: app.showSubWindow("invalidKeyWindow")
+''' 
+This code builds a window to display an invalid API key message.
+The window can be shown by calling: app.showSubWindow("invalidKeyWindow")
+'''
 app.startSubWindow("invalidKeyWindow", "Error")
 
 app.top = True
@@ -44,17 +63,16 @@ app.addLabel("errorLabel2", "Please visit:")
 app.link("regulations.gov", "https://regulationsgov.github.io/developers/")
 app.addLabel("errorLabel3", "for an API Key.")
 
-def exit(buttonName):
-    app.hideSubWindow("invalidKeyWindow")
-
 app.addButton("   Back   ", exit)
 
 app.stopSubWindow()
 #Done building window.
 
 
-#Builds a window for the final message, to be displayed if/when everything finishes correctly.
-# The window can be shown by calling: app.showSubWindow("successWindow")
+'''
+Builds a window for the final message, to be displayed if/when everything finishes correctly.
+The window can be shown by calling: app.showSubWindow("successWindow")
+'''
 app.startSubWindow("successWindow", "Regulations-Boinc")
 
 app.top = True
@@ -64,10 +82,6 @@ app.font = {'size': 18, 'family': 'Gill Sans'}
 app.padding = (50, 2)
 
 app.addLabel("successMessage", "Successfully stored API Key!")
-
-def end(buttonName):
-    app.hideSubWindow("successWindow")
-    app.stop()
 
 app.addNamedButton("   Done   ", "doneButton", end)
 
@@ -124,22 +138,19 @@ def press(buttonName):
             app.showSubWindow("errorWindow")
             return
 
-        # Anything 300 & above is an error, but 429 is the error for a key that's run out of requests
-        # and 403 is the error for an invalid key
+        '''
+        Anything 300 & above is an error, but 429 is the error for a key that's run out of requests
+        and 403 is the error for an invalid key
+        '''
         if r.status_code > 299 and r.status_code != 429:
 
             if r.status_code == 403:
-
                 app.showSubWindow("invalidKeyWindow")
-
             else:
-
                 app.showSubWindow("errorWindow")
 
         else:
-
             writeAPIKey(apiKey)
-            
             app.showSubWindow("successWindow")
 
 
