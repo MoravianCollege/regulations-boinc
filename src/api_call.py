@@ -27,7 +27,7 @@ def call(url):
 
 # The api key will not be given in the url so it must be added
 def add_api_key(url):
-    return url + "api_key=" + str(key)
+    return url + "&api_key=" + str(key)
 
 
 # Raise an exception if there is an error communicating

@@ -13,10 +13,10 @@ def call_file_processor(filepath, dirpath):
     :param dirpath: path of the directory where workfiles will be written
     :return: returns True if the processor completed successfully
     """
-    f = open(filepath, 'r')
-    for line in f:
-        result = process_call(line)
-        process_results(result, dirpath)
+    with open(filepath, 'r') as f:
+        for line in f:
+            result = process_call(line)
+            process_results(result, dirpath)
     return True
 
 
@@ -39,18 +39,31 @@ def process_results(result, dirpath):
     :param dirpath: path of the directory where workfiles will be written
     :return: returns True if the processing completed successfully
     """
+    docs_json = load_json(result)
     try:
-        docs_json = json.loads(result.text)
         doc_list = docs_json["documents"]
-    except json.JSONDecodeError:
-        raise BadJsonException
     except TypeError:
         raise BadJsonException
     wa.work_accumulator(dirpath)
     for doc in doc_list:
-        wa.add_doc(doc["documentId"], doc["attachmentCount"] + 1)
+        doc_id = doc["documentId"]
+        calls = doc["attachmentCount"] + 1
+        wa.add_doc(doc_id, calls)
     wa.terminate()
     return True
+
+
+def load_json(result):
+    """
+    loads the json format from the result of the api call
+    :param result: the result of the api call
+    :return: returns the json format of the api call
+    """
+    try:
+        docs_json = json.loads(result.text)
+    except json.JSONDecodeError:
+        raise BadJsonException
+    return docs_json
 
 
 # Raised if the json is not correctly formatted or is empty
