@@ -18,9 +18,7 @@ def document_processor(filepath, dirpath):
             doc_id, count = line.split(",")
             result = process_call(make_doc_url(doc_id))
             total = get_extra_documents(result, dirpath, doc_id)
-    with open(dirpath + "/documents.txt", "w+") as wr:
-        wr.write("This is a response from a Document Job")
-
+            
 
 def make_doc_url(documentId):
     """
