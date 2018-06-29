@@ -1,6 +1,6 @@
 import tempfile
 from document_processor import *
-from call_file_processor import *
+from documents_processor import *
 from mock import *
 
 import pytest
@@ -77,4 +77,5 @@ def test_download_document(workfile_tempdir, mock_req):
     type = "msw12"
     download_document(workfile_tempdir, "FDA-2015-N-0540-0004", result, type)
     assert os.path.exists(workfile_tempdir + "/doc.FDA-2015-N-0540-0004.doc")
+
 
