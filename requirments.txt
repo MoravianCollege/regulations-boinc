@@ -2,3 +2,5 @@ pytest
 requests
 requests_mock
 mock
+flask
+redis

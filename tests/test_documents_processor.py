@@ -1,4 +1,4 @@
-from call_file_processor import *
+from documents_processor import *
 import tempfile
 from mock import *
 
