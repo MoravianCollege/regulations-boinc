@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import sys, os, os.path
+import sys, os, os.path, tempfile
 
 """
 This program is a validator
@@ -66,28 +66,24 @@ if __name__ == "__main__":
     if sys.argv[1] != '--error':
 
         tar_file = sys.argv[1]
-        PATH = "temp/"
+        PATH = tempfile.mkdtemp()
+        PATHstr = str(PATH)
 
         # Unzip the tar file and then remove the tar file
-        os.system("mkdir ~/project/tmp_boincserver/temp")
-        os.system("tar xzf " + tar_file + " --directory ~/project/tmp_boincserver/temp")
+        os.system("tar xzf " + tar_file + " --directory " + PATHstr)
 
         # Create a list of all the files in the directory
-        file_list = os.listdir(PATH)
+        file_list = os.listdir(PATHstr)
 
         count = 0
 
         for file in file_list:
 
-            count += documents_checker(PATH + file)
-            count += document_checker(PATH + file)
+            count += documents_checker(PATHstr + "/" + file)
+            count += document_checker(PATHstr + "/" + file)
 
         if count == len(file_list):
-            os.system("rm -r ~/project/tmp_boincserver/temp")
-            os.system("rm -rf ~/project/tmp_boincserver/")
             sys.exit(0)
 
         else:
-            os.system("rm -r ~/project/tmp_boincserver/temp")
-            os.system("rm -rf ~/project/tmp_boincserver/")
             sys.exit(1)
