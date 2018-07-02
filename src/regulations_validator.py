@@ -18,8 +18,7 @@ def file_length_checker(file_name):
 
 
 def documents_checker(path):
-    split_path = path.split("/")
-    file_name = split_path[len(split_path)-1]
+    file_name = get_file_name(path)
 
     number = True
     for x in range(7,10):
@@ -38,8 +37,7 @@ def documents_checker(path):
 
 
 def document_checker(path):
-    split_path = path.split("/")
-    file_name = split_path[len(split_path) - 1]
+    file_name = get_file_name(path)
     split_id = file_name.split("-")
     split_id = split_id[len(split_id) - 1].split(".")
     document_number = split_id[len(split_id) - len(split_id)]
@@ -60,6 +58,12 @@ def int_checker(string):
         except:
             return False
     return True
+
+
+def get_file_name(path):
+    split_path = path.split("/")
+    file_name = split_path[len(split_path) - 1]
+    return file_name
 
 
 if __name__ == "__main__":

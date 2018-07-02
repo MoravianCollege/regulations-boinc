@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
-import sys, os, os.path, tempfile, requests
+import sys, os, os.path, tempfile, requests, re
 
 """
 This program does the assimilation for Boinc. 
 It creates a master file of squares and adds the results of all of the work to the file.
 :return:
 """
+
 
 def checkFile(filePath):
         """
@@ -20,20 +21,62 @@ def checkFile(filePath):
 
         return append_write
 
+
 def documents_job(path):
-    split_path = path.split("/")
-    file_name = split_path[len(split_path) - 1]
+    # file_name = get_file_name(path)
 
     # Call to make New Job
+    # create_work(path) ?
     return 0
 
+
 def document_job(path):
+    file_name = get_file_name(path)
+
+    # Delete job on other server
+    r = requests.post("127.0.0.1:420/work_done", job_id="", key="")
+    # Save it to Local
+    org, docket_id, document_id = get_doc_attributes(file_name)
+    local_save(path, org, docket_id, document_id, file)
+    os.system("mv " + path + " to/directory")
+    # Save it to Fred
+
+    return 0
+
+
+def get_file_name(path):
     split_path = path.split("/")
     file_name = split_path[len(split_path) - 1]
-    r = requests.get("127.0.0.1:420")
-    # Save it to Local
-    # Save it to Fred
-    return 0
+    return file_name
+
+
+def get_document_id(file_name):
+    doc,id,ending = file_name.split(".")
+    return id
+
+
+def create_new_dir(path):
+    try:
+        os.mkdir(path)
+    except OSError:
+        pass
+
+
+def local_save(path, file, destination):
+
+    if os.path.exists(path):
+        os.system("mv " + path + " " + destination)
+
+def get_doc_attributes(file_name):
+    document_id = file_name.split(".")
+
+    split_name = re.split("[-_]", document_id[1])
+
+    length = len(split_name)
+
+    document_number = split_name[-1]
+    org = split_name[0]
+    docket_number = split_name[length - 2]
 
 
 if __name__ == "__main__":

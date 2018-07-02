@@ -1,53 +1,38 @@
 import pytest
+import requests_mock
+import tempfile
+import os
 
-import regulations_validator as rv
+import regulations_assimilator as ra
 
 PATH = 'test_files/'
+ip = "127.0.0.1:420"
+
+@pytest.fixture
+def mock_req():
+    with requests_mock.Mocker() as m:
+        yield m
+
+@pytest.fixture()
+def workfile_tempdir():
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        yield tmpdirname
+
+def test_get_document_id():
+    assert ra.get_document_id('doc.mesd-2018-234234-0001.json') == "mesd-2018-234234-0001"
+
+def test_get_document_id_special():
+    assert ra.get_document_id('doc.AHRQ_FRDOC_0001-0036.json') == "AHRQ_FRDOC_0001-0036"
+
+def test_get_file_name():
+    assert ra.get_file_name(PATH + 'doc.mesd-2018-234234-0001.json') == "doc.mesd-2018-234234-0001.json"
+
+def test_create_new_dir(workfile_tempdir):
+    ra.create_new_dir(workfile_tempdir)
+    assert os.path.exists(workfile_tempdir)
+
+def test_local_save():
+    assert ra.local_save(PATH + 'doc.mesd-2018-234234-0001.json')
+    assert os.path.exists(PATH + 'doc.mesd-2018-234234-0001.json')
 
 
-def test_file_checker_500_lines():
-    assert rv.file_length_checker(PATH + '500_lines.txt') is True
-
-
-def test_file_checker_1000_lines():
-    assert rv.file_length_checker(PATH + '1000_lines.txt') is True
-
-
-def test_file_checker_1001_lines():
-    assert rv.file_length_checker(PATH + '1001_lines.txt') is False
-
-
-def test_documents_checker_results0000():
-    assert rv.documents_checker(PATH + 'results0000.txt') == 1
-
-
-def test_documents_checker_bad_beginning():
-    assert rv.documents_checker(PATH + 'rseults0000.txt') == 0
-
-
-def test_documents_checker_bad_middle():
-    assert rv.documents_checker(PATH + 'resultsABCD.txt') == 0
-
-
-def test_documents_checker_bad_ending():
-    assert rv.documents_checker(PATH + 'results0000.csv') == 0
-
-
-def test_document_checker_doc_HHS_OS_2018_0008_29185_html():
-    assert rv.document_checker(PATH + 'doc.HHS-OS-2018-0008-29185.html') == 1
-
-
-def test_document_checker_doc_AHRQ_FRDOC_0001_0035_html():
-    assert rv.document_checker(PATH + 'doc.AHRQ_FRDOC_0001-0035.html') == 1
-
-
-def test_document_checker_bad_beginning():
-    assert rv.document_checker(PATH + 'dco.HHS-OS-2018-0008-29185.html') == 0
-
-
-def test_document_checker_bad_document_number():
-    assert rv.document_checker(PATH + 'doc.HHS-OS-2018-0008-ABCDE.html') == 0
-
-
-def test_document_checker_bad_document_number_special():
-    assert rv.document_checker(PATH + 'doc.AHRQ_FRDOC_0001-ABCD.html') == 0
