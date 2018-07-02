@@ -79,16 +79,17 @@ def work_done():
     return 'Ok'
 
 
-if __name__ == '__main__':
-    app.run('0.0.0.0',port=5000)
-
-
 class PostException(Exception):
     print("Bad Request")
 
 
 class GetException(Exception):
     print("Bad Request")
+
+
+if __name__ == '__main__':
+    app.run('0.0.0.0',port=5000)
+
 
 
 def generate_random_id():
