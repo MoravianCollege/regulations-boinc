@@ -1,6 +1,5 @@
 import json
 from documents_processor import *
-import urllib.request
 
 base_url = 'https://api.data.gov/regulations/v3/document?documentId='
 

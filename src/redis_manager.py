@@ -20,6 +20,9 @@ class RedisManager:
     def delete_all(self):
         self.r.flushall()
 
+    def delete_job(self, job_id):
+        self.r.delete(job_id)
+
     def get_job_id_list(self):
         return self.r.keys()
 

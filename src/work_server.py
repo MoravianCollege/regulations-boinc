@@ -9,11 +9,10 @@ from redis_manager import RedisManager
 
 app = Flask(__name__)
 
-#JUST BASIC BAD KEY, MUST CHANGE THIS
+# JUST BASIC BAD KEY, MUST CHANGE THIS
 key = os.environ['WORK_SERVER_KEY']
 
 r = RedisManager(redis.Redis())
-
 
 
 @app.route('/')
@@ -30,17 +29,16 @@ def add_work():
     except:
         raise PostException
 
-    if(received_key != key):
+    if received_key != key:
         raise PostException
-    if(len(job_id) != 16):
+    if len(job_id) != 16:
         raise PostException
-    if(isinstance(job_units, list)):
+    if isinstance(job_units, list):
         raise PostException
 
-    # EITHER MOCK CLASS OR MOCK REDIS
     r.add_data(job_id, job_units)
 
-    return json.dumps({'Ok'})
+    return 'Ok'
 
 
 @app.route('/get_data')
@@ -55,13 +53,30 @@ def get_data():
         raise GetException
 
     urls = []
-    for id in r.get_job_id_list():
+    keys = r.get_job_id_list()
+    for id in keys:
         if job_id == id:
             urls = r.get_job_units(id).decode("utf-8")
-            id = id.decode("utf-8")
 
-    return 'Good'
+    return json.dumps(urls)
 
+
+@app.route('/work_done', methods=['POST'])
+def work_done():
+    try:
+        job_id = request.form['job_id']
+        received_key = request.form['key']
+    except:
+        raise PostException
+
+    if received_key != key:
+        raise PostException
+    if len(job_id) != 16:
+        raise PostException
+
+    r.delete_job(job_id)
+
+    return 'Ok'
 
 
 if __name__ == '__main__':
@@ -71,9 +86,12 @@ if __name__ == '__main__':
 class PostException(Exception):
     print("Bad Request")
 
+
 class GetException(Exception):
     print("Bad Request")
 
+
 def generate_random_id():
     return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(16))
+
 
