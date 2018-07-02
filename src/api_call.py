@@ -15,7 +15,7 @@ def call(url):
     :param url: the url that will be used to make the api call
     :return: returns the json format information of the documents
     """
-    result = requests.get(add_api_key(url))
+    result = requests.get(url)
     if 300 <= result.status_code < 400:
         raise TemporaryException
     if result.status_code == 429:
