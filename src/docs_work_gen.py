@@ -20,7 +20,7 @@ def monolith():
     key_file = 'docs_count.txt'
     try:
         file = open(key_file, "r+")
-    except FileNotFoundError:
+    except:
         file = open(key_file, "w+")
 
     regulations_key = os.environ["REGULATIONS_KEY"]
