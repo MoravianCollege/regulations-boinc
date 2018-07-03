@@ -34,9 +34,6 @@ def make_databse():
     return r
 
 
-def test_16_character_id():
-    assert len(generate_random_id()) == 16
-
 @mock.patch('redis_manager.RedisManager.get_job_units')
 @mock.patch('redis_manager.RedisManager.get_job_id_list')
 def test_get_request_successful_connection(mock_units,mock_id,client):

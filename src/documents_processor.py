@@ -4,7 +4,6 @@ import sys
 import json
 
 base_url = 'http://10.76.100.145:5000/get_data?job_id='
-# CHANGE
 
 home = os.getenv("HOME")
 with open(home + '/.env/regulationskey.txt') as f:
