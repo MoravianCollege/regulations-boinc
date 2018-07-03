@@ -1,24 +1,27 @@
-import json
 from documents_processor import *
-import urllib.request
 
 base_url = 'https://api.data.gov/regulations/v3/document?documentId='
+server_url = 'https://10.76.100.164:5000/'
 
 
-def document_processor(filepath, dirpath):
+def document_processor(dirpath):
     """
     This will read document Ids from a file located at filepath
     For each document an api call will be made and the content will be downloaded and saved into dirpath
-    :param filepath: path to the file that contains the document Ids
     :param dirpath: path to the directory where the downloads will be saved
     :return:
     """
-    with open(filepath, 'r') as f:
-        for line in f:
-            doc_id, count = line.split(",")
-            result = process_call(make_doc_url(doc_id))
-            total = get_extra_documents(result, dirpath, doc_id)
-            
+    job_id = get_sys_arg()
+    get_call = server_url + job_id
+    doc_ids = process_call(get_call)
+
+    for doc_id in doc_ids:
+        result = process_call(add_api_key(make_doc_url(doc_id)))
+        total = get_extra_documents(result, dirpath, doc_id)
+    with open(dirpath + "/documents.txt", "w+") as wr:
+        wr.write("This is a response from a Document Job")
+    with open(dirpath + "/job_id.txt", "w+") as j:
+        j.write(job_id)
 
 def make_doc_url(documentId):
     """
@@ -92,7 +95,7 @@ def download_doc_formats(dirpath, doc_json, documentId):
         extra_formats = doc_json["fileFormats"]
         total_requests += len(extra_formats)
         for extra_doc in extra_formats:
-            result = process_call(str(extra_doc))
+            result = process_call(add_api_key(str(extra_doc)))
             here = extra_doc.index("contentType") + 12
             type = extra_doc[here:]
             download_document(dirpath, documentId, result, type)
@@ -118,7 +121,7 @@ def download_attachments(dirpath, doc_json, documentId):
             for a_format in attachment_formats:
                 here = str(a_format).index("contentType") + 12
                 type = str(a_format)[here:]
-                result = process_call(str(a_format))
+                result = process_call(add_api_key(str(a_format)))
                 download_document(dirpath, documentId, result, type)
     except KeyError:
         pass
