@@ -9,7 +9,9 @@ import requests_mock
 
 from api_call import *
 
-key = os.environ['API_TOKEN_REGULATIONS_GOV']
+home = os.getenv("HOME")
+with open(home + '/.env/regulationskey.txt') as f:
+    key = f.readline()
 base_url = 'https://api.data.gov:443/regulations/v3/documents.json?'
 
 

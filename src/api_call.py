@@ -1,7 +1,9 @@
 import requests
 import os
 
-key = os.environ['API_TOKEN_REGULATIONS_GOV']
+home = os.getenv("HOME")
+with open(home + '/.env/regulationskey.txt') as f:
+    key = f.readline()
 
 
 def call(url):
