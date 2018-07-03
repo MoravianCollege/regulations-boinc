@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 import requests
 import boinc2docker_create_work as b2d
+import os
+import random
+import string
 
 work_server_key = os.environ["WORK_SERVER_KEY"]
 
