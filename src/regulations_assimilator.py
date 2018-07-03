@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 
-import sys, os, os.path, tempfile, requests, re
+import sys, os, os.path, tempfile, requests, re, shutil
+
+from work_generator import create_work
+
+ip = "10.76.100.145:5000"
+
+server_key = os.environ["WORK_SERVER_KEY"]
 
 """
 This program does the assimilation for Boinc. 
@@ -13,35 +19,27 @@ def checkFile(filePath):
         """
         Simple checker to see if the file needs to be created or appended to.
         """
-
         if os.path.exists(filePath): 
                 append_write = 'a'
         else: 
                 append_write = 'w'
-
         return append_write
 
 
+# TODO
 def documents_job(path):
-    # file_name = get_file_name(path)
-
-    # Call to make New Job
-    # create_work(path) ?
-    return 0
+    document_ids = []
+    with open(path, 'r') as f:
+        for line in f:
+            doc_id = line.strip()
+            document_ids.append(doc_id)
+    create_work(document_ids)
 
 
 def document_job(path):
-    file_name = get_file_name(path)
-
-    # Delete job on other server
-    r = requests.post("127.0.0.1:420/work_done", job_id="", key="")
-    # Save it to Local
-    org, docket_id, document_id = get_doc_attributes(file_name)
-    local_save(path, org, docket_id, document_id, file)
-    os.system("mv " + path + " to/directory")
-    # Save it to Fred
-
-    return 0
+    save_path = 'root/project/data/'
+    local_save(path, save_path)
+    # TODO: Save it to Google Storage
 
 
 def get_file_name(path):
@@ -62,21 +60,33 @@ def create_new_dir(path):
         pass
 
 
-def local_save(path, file, destination):
-
-    if os.path.exists(path):
-        os.system("mv " + path + " " + destination)
-
 def get_doc_attributes(file_name):
-    document_id = file_name.split(".")
+    document_id = get_document_id(file_name)
 
-    split_name = re.split("[-_]", document_id[1])
-
-    length = len(split_name)
-
-    document_number = split_name[-1]
+    split_name = re.split("[-_]", document_id)
     org = split_name[0]
-    docket_number = split_name[length - 2]
+    if not split_name[1].isdigit():
+        org = org + '-' + split_name[1]
+    id = split_name[-1]
+    docket_id = document_id[:document_id.index(id)-1]
+    return org, docket_id, document_id
+
+
+def local_save(cur_path, destination):
+    file_name = get_file_name(cur_path)
+    org, docket_id, document_id = get_doc_attributes(file_name)
+    destination_path = destination + org + "/" + docket_id + "/" + document_id + "/"
+    if not os.path.exists(destination_path):
+        os.makedirs(destination_path)
+    shutil.copy(cur_path, destination_path + '/' + file_name)
+
+
+def remove_job(path):
+    with open(path + 'job_id.txt', 'r') as f:
+        job_id = f.read().strip()
+    r = requests.post(ip + "/work_done?job_id=" + job_id + "&key=" + server_key)
+    r.raise_for_status()
+
 
 
 if __name__ == "__main__":
@@ -103,3 +113,5 @@ if __name__ == "__main__":
             # Document Checker
             elif file.startswith("doc."):
                 document_job(PATH + "/" + file)
+
+        remove_job(PATH)

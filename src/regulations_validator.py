@@ -86,6 +86,9 @@ if __name__ == "__main__":
             count += documents_checker(PATHstr + "/" + file)
             count += document_checker(PATHstr + "/" + file)
 
+        if os.path.exists(PATHstr + '/job_id.txt'):
+            count += 1
+
         if count == len(file_list):
             sys.exit(0)
 
