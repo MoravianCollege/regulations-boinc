@@ -11,7 +11,6 @@ def document_processor(dirpath):
     :param dirpath: path to the directory where the downloads will be saved
     :return:
     """
-
     job_id = get_sys_arg()
     get_call = server_url + job_id
     doc_ids = process_call(get_call)
@@ -23,9 +22,6 @@ def document_processor(dirpath):
         wr.write("This is a response from a Document Job")
     with open(dirpath + "/job_id.txt", "w+") as j:
         j.write(job_id)
-
-
-
 
 def make_doc_url(documentId):
     """
