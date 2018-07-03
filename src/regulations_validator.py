@@ -7,19 +7,25 @@ This program is a validator
 
 
 def file_length_checker(file_name):
-    
+    """
+    Checks the length of the file returned to the validator
+    :param file_name: path of the file to be checked
+    :return:
+    """
     result = open(file_name, "r")
     counter = 0
-
     for line in result:
         counter += 1
-
     return counter <= 1000
 
 
 def documents_checker(path):
+    """
+    Checks the names of the files returned from the documents jobs
+    :param path: location of the results files from the job
+    :return:
+    """
     file_name = get_file_name(path)
-
     number = True
     for x in range(7,10):
         try:
@@ -37,6 +43,11 @@ def documents_checker(path):
 
 
 def document_checker(path):
+    """
+    Checks the files returned from the document job
+    :param path: location of the result files
+    :return:
+    """
     file_name = get_file_name(path)
     split_id = file_name.split("-")
     split_id = split_id[len(split_id) - 1].split(".")
@@ -61,6 +72,11 @@ def int_checker(string):
 
 
 def get_file_name(path):
+    """
+    Extracts the name of the file from the given path
+    :param path: location of the file in which the name will be extracted from
+    :return:
+    """
     split_path = path.split("/")
     file_name = split_path[len(split_path) - 1]
     return file_name
