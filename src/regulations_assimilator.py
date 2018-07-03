@@ -4,7 +4,7 @@ import sys, os, os.path, tempfile, requests, re, shutil
 
 from doc_work_gen import build_job
 
-ip = "10.76.100.145:5000"
+ip = "http://10.76.100.145:5000"
 
 server_key = os.environ["WORK_SERVER_KEY"]
 
