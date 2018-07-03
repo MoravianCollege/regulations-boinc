@@ -4,10 +4,8 @@ import fakeredis
 from work_server import *
 import work_server
 import mock
-from redis_manager import *
 
-base_url = 'https://10.76.100.164:420/'
-#JUST BASIC BAD KEY, MUST CHANGE THIS
+base_url = 'https://10.76.100.164:5000/'
 test_key = os.environ['WORK_SERVER_KEY']
 
 @pytest.fixture

@@ -27,6 +27,10 @@ def documents_processor(dirpath):
     for url in urls:
         result = process_call(add_api_key(url.decode('utf-8')))
         process_results(result, dirpath)
+
+    with open(dirpath + "/job_id.txt", "w+") as j:
+        j.write(job_id)
+
     return True
 
 

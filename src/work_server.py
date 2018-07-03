@@ -9,8 +9,7 @@ from redis_manager import RedisManager
 
 app = Flask(__name__)
 
-# JUST BASIC BAD KEY, MUST CHANGE THIS
-key = os.environ['WORK_SERVER_KEY']
+work_key = os.environ['WORK_SERVER_KEY']
 
 r = RedisManager(redis.Redis())
 
@@ -29,7 +28,7 @@ def add_work():
     except:
         raise PostException
 
-    if received_key != key:
+    if received_key != work_key:
         raise PostException
     if len(job_id) != 16:
         raise PostException
@@ -69,7 +68,7 @@ def work_done():
     except:
         raise PostException
 
-    if received_key != key:
+    if received_key != work_key:
         raise PostException
     if len(job_id) != 16:
         raise PostException

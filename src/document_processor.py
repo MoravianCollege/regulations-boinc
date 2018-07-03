@@ -1,20 +1,19 @@
-import json
 from documents_processor import *
 
 base_url = 'https://api.data.gov/regulations/v3/document?documentId='
+server_url = 'https://10.76.100.164:5000/'
 
 
 def document_processor(dirpath):
     """
     This will read document Ids from a file located at filepath
     For each document an api call will be made and the content will be downloaded and saved into dirpath
-    :param filepath: path to the file that contains the document Ids
     :param dirpath: path to the directory where the downloads will be saved
     :return:
     """
 
     job_id = get_sys_arg()
-    get_call = base_url + job_id
+    get_call = server_url + job_id
     doc_ids = process_call(get_call)
 
     for doc_id in doc_ids:
@@ -22,6 +21,8 @@ def document_processor(dirpath):
         total = get_extra_documents(result, dirpath, doc_id)
     with open(dirpath + "/documents.txt", "w+") as wr:
         wr.write("This is a response from a Document Job")
+    with open(dirpath + "/job_id.txt", "w+") as j:
+        j.write(job_id)
 
 
 

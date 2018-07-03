@@ -1,6 +1,5 @@
 from documents_processor import *
 import tempfile
-from mock import *
 import mock
 
 
