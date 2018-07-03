@@ -5,7 +5,7 @@ import threading
 
 class RedisManager:
 
-    def __init__(self):
+    def __init__(self, command):
         """
         Initialize the database
         """
