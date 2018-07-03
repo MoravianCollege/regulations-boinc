@@ -2,7 +2,7 @@
 
 import sys, os, os.path, tempfile, requests, re, shutil
 
-from work_generator import create_work
+from doc_work_gen import build_job
 
 ip = "10.76.100.145:5000"
 
@@ -33,7 +33,7 @@ def documents_job(path):
         for line in f:
             doc_id = line.strip()
             document_ids.append(doc_id)
-    create_work(document_ids)
+    build_job(document_ids)
 
 
 def document_job(path):
